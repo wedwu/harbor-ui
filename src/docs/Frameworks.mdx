@@ -1,0 +1,75 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Foundations/Framework usage" />
+
+# Framework usage
+
+The components are standard custom elements, so the same build works everywhere. Load the tokens once, import the library once, then use the tags.
+
+## Plain HTML
+
+```html
+<link rel="stylesheet" href="harbor-ui/tokens.css" />
+<script type="module" src="harbor-ui"></script>
+
+<hb-button variant="primary">Save</hb-button>
+```
+
+## Angular (17+)
+
+Add `CUSTOM_ELEMENTS_SCHEMA` to the standalone component and bind properties and events as usual.
+
+```ts
+import { Component, CUSTOM_ELEMENTS_SCHEMA, signal } from "@angular/core";
+import "harbor-ui";
+
+@Component({
+  selector: "app-invite",
+  standalone: true,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `
+    <hb-text-field label="Email" type="email" required
+      [value]="email()" (hb-input)="email.set($any($event).detail.value)"></hb-text-field>
+    <hb-button [loading]="sending()" (click)="send()">Send invite</hb-button>
+  `,
+})
+export class InviteComponent {
+  email = signal("");
+  sending = signal(false);
+  send() { this.sending.set(true); }
+}
+```
+
+## React 19
+
+React 19 passes properties and custom events to custom elements directly.
+
+```tsx
+import "harbor-ui";
+
+export function Invite() {
+  const [email, setEmail] = useState("");
+  return (
+    <>
+      <hb-text-field label="Email" type="email" value={email}
+        onhb-input={(e: CustomEvent) => setEmail(e.detail.value)} />
+      <hb-button onClick={() => send(email)}>Send invite</hb-button>
+    </>
+  );
+}
+```
+
+On React 18, wrap each element once with `@lit/react` `createComponent` to get typed props and events.
+
+## Forms
+
+`hb-text-field` and `hb-button` are form-associated, so they work inside a plain `<form>` with no framework glue:
+
+```html
+<form>
+  <hb-text-field name="email" label="Email" type="email" required></hb-text-field>
+  <hb-button type="submit">Subscribe</hb-button>
+</form>
+```
+
+`new FormData(form)` includes the email, `form.reset()` clears it, and the form will not submit while the field is invalid.

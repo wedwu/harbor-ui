@@ -1,0 +1,2 @@
+body { background: var(--hb-color-bg); color: var(--hb-color-text); font-family: var(--hb-font-family-sans); }
+.docs-story { background: var(--hb-color-bg) !important; }

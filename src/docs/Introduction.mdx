@@ -1,0 +1,27 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Introduction" />
+
+# Harbor UI
+
+A small design system built the way larger ones are: **design tokens** at the bottom, **framework-agnostic Web Components** on top, and **Storybook** as the documentation and review surface.
+
+Harbor is a fictional brand. Every name and value here was made up for this demo.
+
+## What's inside
+
+| Layer | What it is | Where |
+|---|---|---|
+| Tokens | Primitive values (color scales, spacing, radius, type) and semantic tokens (`color-action`, `color-danger-fg`) that themes remap | `tokens/tokens.json` |
+| Build | A small script that turns the JSON into CSS custom properties for light and dark themes, plus a typed TypeScript map | `scripts/build-tokens.mjs` |
+| Components | `hb-button`, `hb-text-field`, `hb-alert`, `hb-card`, `hb-dialog`, written in Lit and TypeScript | `src/components` |
+| Docs | Usage guidance, live controls and automatic accessibility checks on every story | this Storybook |
+
+## Principles
+
+1. **Components use semantic tokens only.** A component asks for `--hb-color-action`, never for a hex value or a primitive. Dark mode is then a token remap, not a component change.
+2. **Accessible by default.** Labels, descriptions and states are wired up inside each component, so teams get them without extra work. Every story runs axe through the Accessibility panel.
+3. **Work with the platform.** Form fields join native forms through `ElementInternals`, and the dialog uses the native `<dialog>` element for focus trapping and Escape handling.
+4. **One build, any framework.** Web Components run in plain HTML, React, Angular or Vue. See *Foundations / Framework usage*.
+
+Use the **Theme** button in the toolbar to switch every story between light and dark.

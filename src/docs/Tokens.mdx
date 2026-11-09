@@ -1,0 +1,57 @@
+import { Meta } from "@storybook/blocks";
+import { primitives, semanticLight, semanticDark } from "../tokens/tokens";
+
+<Meta title="Foundations/Tokens" />
+
+export const Swatch = ({ name, value, dark }) => (
+  <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "6px 0", borderBottom: "1px solid #eaeef2" }}>
+    <div style={{ display: "flex", flex: "none" }}>
+      <span title="light" style={{ width: 28, height: 28, borderRadius: "6px 0 0 6px", border: "1px solid #d6dce3", background: `var(--hb-${name})` }} />
+      {dark && <span title="dark" style={{ width: 28, height: 28, borderRadius: "0 6px 6px 0", border: "1px solid #d6dce3", background: dark }} />}
+    </div>
+    <code style={{ flex: 1 }}>--hb-{name}</code>
+    <span style={{ color: "#57606a", fontSize: 13 }}>{value}{dark ? ` / ${dark}` : ""}</span>
+  </div>
+);
+
+export const resolve = (v) => v.replace(/\{([^}]+)\}/g, (_, p) => primitives[p.replaceAll(".", "-")] ?? v);
+
+# Tokens
+
+Tokens come in two layers.
+
+- **Primitives** are raw values: `navy-600`, `space-4`, `radius-md`. Components never use them directly.
+- **Semantic tokens** describe a job: `color-action`, `color-text-muted`, `color-danger-bg`. Each theme points them at different primitives.
+
+Edit `tokens/tokens.json`, run `npm run tokens`, and `src/tokens/tokens.css` and `src/tokens/tokens.ts` are regenerated. The build fails if a semantic token points at a primitive that does not exist, or if the dark theme is missing a token the light theme defines.
+
+## Semantic colors (light / dark)
+
+<div>
+  {Object.entries(semanticLight).map(([name, value]) => (
+    <Swatch key={name} name={name} value={value.startsWith("{") ? value.slice(1, -1) : value} dark={resolve(semanticDark[name])} />
+  ))}
+</div>
+
+## Spacing
+
+<div>
+  {Object.entries(primitives).filter(([k]) => k.startsWith("space-")).map(([k, v]) => (
+    <div key={k} style={{ display: "flex", alignItems: "center", gap: 12, padding: "4px 0" }}>
+      <code style={{ width: 120 }}>--hb-{k}</code>
+      <span style={{ display: "inline-block", height: 12, width: v, background: "var(--hb-color-action)", borderRadius: 2 }} />
+      <span style={{ color: "#57606a", fontSize: 13 }}>{v}</span>
+    </div>
+  ))}
+</div>
+
+## Using tokens outside the components
+
+```css
+.report-header { padding: var(--hb-space-4); color: var(--hb-color-text-muted); }
+```
+
+```ts
+import { cssVar } from "harbor-ui";
+element.style.borderColor = cssVar("color-border");
+```
