@@ -72,6 +72,10 @@ tests/a11y-and-behavior.mjs axe and browser behaviour checks
 
 Lit 3 · TypeScript · Storybook 8 · Vite · Vitest · Playwright · axe-core
 
+## How it was built
+
+Built with Claude as a pair programmer. I set the scope, the token architecture and the accessibility requirements, and reviewed every change.
+
 ## License
 
 MIT
